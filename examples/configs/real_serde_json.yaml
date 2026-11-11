@@ -1,0 +1,6 @@
+package: serde_json
+repository: https://index.crates.io
+version: 1.0.120
+output_image: output/real_serde_json.svg
+ascii_tree: true
+max_depth: 3

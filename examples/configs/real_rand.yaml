@@ -1,0 +1,6 @@
+package: rand
+repository: https://index.crates.io
+version: 0.8.5
+output_image: output/real_rand.svg
+ascii_tree: true
+max_depth: 3

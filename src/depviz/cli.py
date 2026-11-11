@@ -5,10 +5,13 @@ import sys
 
 from .cargo_index import CargoIndex, RegistryError
 from .config import DEFAULT_CONFIG, ConfigError, load_config
-from .graph import Settings, build_graph
+from .ascii_tree import ascii_tree
+from .graph import Settings, build_graph, find_cycles
+from .mermaid import to_mermaid
 from .report import print_graph
 from .reverse import build_reverse_graph, print_reverse
 from .sources import CargoSource
+from .svg import save_svg
 from .test_repo import RepositoryError, TestRepositorySource, load_repository
 
 EXIT_OK = 0
@@ -33,6 +36,10 @@ def build_parser():
     parser.add_argument(
         "--direct", action="store_true",
         help="вывести только прямые зависимости (этап 2)",
+    )
+    parser.add_argument(
+        "--levels", action="store_true",
+        help="вывести уровни и рёбра графа (этап 3)",
     )
     return parser
 
@@ -60,7 +67,24 @@ def make_source(config):
     return CargoSource(index, config.package, config.version)
 
 
-def execute(config, out, direct=False):
+def visualize(config, source, graph, out):
+    """Вывести ASCII-дерево и Mermaid, сохранить SVG (этап 5)."""
+    if config.ascii_tree:
+        print("\n".join(ascii_tree(graph, source.label)), file=out)
+        print(file=out)
+    print(to_mermaid(graph, source.label), file=out)
+    for cycle in find_cycles(graph):
+        path = " -> ".join(source.label(node) for node in cycle)
+        print(f"Циклическая зависимость: {path}", file=out)
+    try:
+        save_svg(graph, source.label, config.output_image)
+    except OSError as problem:
+        raise RegistryError(f"не удалось сохранить {config.output_image}: "
+                            f"{problem.strerror}") from problem
+    print(f"Изображение графа сохранено: {config.output_image}", file=out)
+
+
+def execute(config, out, direct=False, levels=False):
     """Выполнить анализ по настройкам."""
     if direct and not config.test_mode:
         print_direct(config, CargoIndex(config.repository), out)
@@ -71,7 +95,10 @@ def execute(config, out, direct=False):
         return
     source = make_source(config)
     graph = build_graph(source, settings)
-    print_graph(graph, source, settings, out)
+    if levels:
+        print_graph(graph, source, settings, out)
+        return
+    visualize(config, source, graph, out)
 
 
 def show_reverse(config, settings, out):
@@ -100,7 +127,7 @@ def run(argv=None, out=None, err=None):
         for line in config.describe():
             print(line, file=out)
     try:
-        execute(config, out, args.direct)
+        execute(config, out, args.direct, args.levels)
     except (RegistryError, RepositoryError) as problem:
         print(f"Ошибка получения данных: {problem}", file=err)
         return EXIT_DATA_ERROR

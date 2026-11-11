@@ -1,0 +1,6 @@
+package: mini-app
+repository: http://localhost:8000
+version: 1.1.0
+output_image: output/mini_app.svg
+ascii_tree: true
+max_depth: 5

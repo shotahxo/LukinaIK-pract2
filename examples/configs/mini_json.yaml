@@ -1,0 +1,6 @@
+package: mini-json
+repository: http://localhost:8000
+version: 1.2.5
+output_image: output/mini_json.svg
+ascii_tree: true
+max_depth: 5

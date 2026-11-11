@@ -1,0 +1,6 @@
+package: log
+repository: https://index.crates.io
+version: 0.4.22
+output_image: output/real_log.svg
+ascii_tree: true
+max_depth: 3

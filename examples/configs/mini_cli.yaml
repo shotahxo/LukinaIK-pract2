@@ -1,0 +1,6 @@
+package: mini-cli
+repository: http://localhost:8000
+version: 0.3.4
+output_image: output/mini_cli.svg
+ascii_tree: true
+max_depth: 5

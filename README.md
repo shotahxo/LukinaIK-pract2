@@ -30,3 +30,9 @@ Cargo (`https://index.crates.io`) через `urllib`, без cargo и стор�
 которые зависят от `package`. Используется тот же рекурсивный BFS по
 перевёрнутому графу тестового репозитория. Демонстрация:
 `make demo-reverse`.
+
+## Этап 5. Визуализация
+
+Граф выводится на языке Mermaid, сохраняется в SVG (`output_image`), а при
+`ascii_tree: true` печатается ASCII-деревом. Демонстрация:
+`make demo-visual` (тестовый репозиторий) и `make demo-real` (crates.io).

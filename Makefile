@@ -29,3 +29,11 @@ demo-graph:
 
 demo-reverse:
 	./scripts/demo_reverse.sh
+
+.PHONY: demo-visual demo-real
+
+demo-visual:
+	./scripts/demo_visual.sh
+
+demo-real:
+	./scripts/demo_real.sh

@@ -1,0 +1,7 @@
+package: A
+repository: examples/repos/simple.txt
+test_mode: true
+output_image: output/visual_simple.svg
+ascii_tree: true
+max_depth: 10
+filter_substring: ""
