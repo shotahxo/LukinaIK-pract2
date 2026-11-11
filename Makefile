@@ -11,3 +11,11 @@ test:
 
 errors:
 	./scripts/check_config_errors.sh
+
+.PHONY: mini-index serve
+
+mini-index:
+	$(PYTHON) examples/build_mini_index.py
+
+serve: mini-index
+	$(PYTHON) -m http.server 8000 --directory examples/mini-index

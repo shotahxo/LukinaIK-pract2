@@ -109,12 +109,13 @@ class CliTests(FixtureCase):
     """Запуск из командной строки."""
 
     def test_prints_parameters(self):
-        """При запуске выводятся все параметры."""
+        """С ключом --show-config выводятся все параметры."""
         repo = self.make_file("A:\n")
         path = self.make_file(
             f"package: A\nrepository: {repo}\ntest_mode: true\n", ".yaml")
         out = io.StringIO()
-        self.assertEqual(run(["-c", path], out=out), EXIT_OK)
+        self.assertEqual(run(["-c", path, "--show-config"], out=out),
+                         EXIT_OK)
         self.assertIn("max_depth = 5", out.getvalue())
 
     def test_error_exit_code(self):

@@ -17,3 +17,4 @@ output/
 .vscode/
 .idea/
 .DS_Store
+examples/mini-index/
