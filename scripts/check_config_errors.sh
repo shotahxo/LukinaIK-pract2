@@ -3,10 +3,10 @@
 cd "$(dirname "$0")/.." || exit 1
 show() {
     printf '\n>>> %s\n' "$1"
-    ./run.sh -c "$1"
+    ./run.sh -c "$1" --show-config --levels
     printf '<<< код завершения: %s\n' "$?"
 }
-show config.yaml
+show examples/configs/simple.yaml
 show examples/errors/no_such_config.yaml
 for file in examples/errors/*.yaml; do
     show "$file"
