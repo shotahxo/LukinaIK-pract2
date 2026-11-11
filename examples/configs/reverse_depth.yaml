@@ -1,0 +1,6 @@
+package: H
+repository: examples/repos/deep.txt
+test_mode: true
+reverse_deps: true
+max_depth: 3
+filter_substring: ""

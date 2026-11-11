@@ -24,3 +24,8 @@ serve: mini-index
 
 demo-graph:
 	./scripts/demo_graph.sh
+
+.PHONY: demo-reverse
+
+demo-reverse:
+	./scripts/demo_reverse.sh

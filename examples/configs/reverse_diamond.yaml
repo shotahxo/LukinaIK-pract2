@@ -1,0 +1,6 @@
+package: E
+repository: examples/repos/diamond.txt
+test_mode: true
+reverse_deps: true
+max_depth: 10
+filter_substring: ""

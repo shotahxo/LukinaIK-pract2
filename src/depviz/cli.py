@@ -7,6 +7,7 @@ from .cargo_index import CargoIndex, RegistryError
 from .config import DEFAULT_CONFIG, ConfigError, load_config
 from .graph import Settings, build_graph
 from .report import print_graph
+from .reverse import build_reverse_graph, print_reverse
 from .sources import CargoSource
 from .test_repo import RepositoryError, TestRepositorySource, load_repository
 
@@ -64,10 +65,25 @@ def execute(config, out, direct=False):
     if direct and not config.test_mode:
         print_direct(config, CargoIndex(config.repository), out)
         return
-    source = make_source(config)
     settings = Settings(config.max_depth, config.filter_substring)
+    if config.reverse_deps:
+        show_reverse(config, settings, out)
+        return
+    source = make_source(config)
     graph = build_graph(source, settings)
     print_graph(graph, source, settings, out)
+
+
+def show_reverse(config, settings, out):
+    """Режим обратных зависимостей (этап 4, тестовый репозиторий)."""
+    if not config.test_mode:
+        raise RegistryError("обратные зависимости поддерживаются для "
+                            "тестового репозитория (test_mode: true): "
+                            "для crates.io потребовался бы весь индекс")
+    repo = load_repository(config.repository)
+    TestRepositorySource(repo, config.package)
+    _source, reverse = build_reverse_graph(repo, config.package, settings)
+    print_reverse(reverse, out)
 
 
 def run(argv=None, out=None, err=None):

@@ -33,6 +33,7 @@ class Config:
     ascii_tree: bool = False
     max_depth: int = 5
     filter_substring: str = ""
+    reverse_deps: bool = False
 
     def items(self):
         """Пары (имя параметра, значение) в порядке объявления."""

@@ -1,0 +1,6 @@
+package: D
+repository: examples/repos/cycle.txt
+test_mode: true
+reverse_deps: true
+max_depth: 10
+filter_substring: ""

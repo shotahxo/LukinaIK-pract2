@@ -1,0 +1,6 @@
+package: UTIL
+repository: examples/repos/filter.txt
+test_mode: true
+reverse_deps: true
+max_depth: 10
+filter_substring: "LOG"
