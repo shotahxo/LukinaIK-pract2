@@ -1,0 +1,3 @@
+package: A
+repository: examples/no_such_repo.txt
+test_mode: true

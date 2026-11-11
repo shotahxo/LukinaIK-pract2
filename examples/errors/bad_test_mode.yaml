@@ -1,0 +1,3 @@
+package: A
+repository: examples/test_repo.txt
+test_mode: maybe

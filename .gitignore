@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Сборка
+build/
+dist/
+*.egg-info/
+
+# Результаты работы программы
+*.svg
+output/
+
+# Редакторы и ОС
+.vscode/
+.idea/
+.DS_Store

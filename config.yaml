@@ -1,0 +1,9 @@
+# Конфигурация depviz
+package: serde_json          # имя анализируемого пакета
+repository: https://index.crates.io
+test_mode: false
+version: 1.0.120
+output_image: graph.svg
+ascii_tree: true
+max_depth: 3
+filter_substring: ""

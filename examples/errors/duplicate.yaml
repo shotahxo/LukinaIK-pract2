@@ -1,0 +1,4 @@
+package: A
+package: B
+repository: examples/test_repo.txt
+test_mode: true

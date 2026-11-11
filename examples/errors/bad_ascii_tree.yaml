@@ -1,0 +1,4 @@
+package: A
+repository: examples/test_repo.txt
+test_mode: true
+ascii_tree: 5
