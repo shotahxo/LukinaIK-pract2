@@ -374,8 +374,8 @@ graph TD
 
 ### 5.2. Сравнение с `cargo tree`
 
-Штатный инструмент Cargo — `cargo tree`. Команды для проверки
-(нужен Rust, https://rustup.rs):
+Штатный инструмент Cargo — `cargo tree`. Для сравнения создан пустой
+проект с тремя зависимостями (нужен Rust, https://rustup.rs):
 
 ```sh
 cargo new compare && cd compare
@@ -383,13 +383,34 @@ cargo add log@=0.4.22 serde_json@=1.0.120 rand@=0.8.5
 cargo tree --depth 3 -e normal,build
 ```
 
+Результат `cargo tree` (macOS):
+
+```
+compare v0.1.0 (/Users/iiaasjk/Downloads/compare)
+├── log v0.4.22
+├── rand v0.8.5
+│   ├── libc v0.2.191
+│   ├── rand_chacha v0.3.1
+│   │   ├── ppv-lite86 v0.2.21
+│   │   └── rand_core v0.6.4
+│   └── rand_core v0.6.4 (*)
+└── serde_json v1.0.120
+    ├── itoa v1.0.19
+    ├── ryu v1.0.23
+    └── serde v1.0.229
+        └── serde_core v1.0.229
+```
+
+Глубина в `cargo tree` считается от проекта `compare`, поэтому для самих
+пакетов показано на один уровень меньше, чем в depviz.
+
 | Пакет | depviz | `cargo tree` | Причина расхождения |
 |-------|--------|--------------|---------------------|
-| `log 0.4.22` | только `log` | только `log` | расхождений нет: все зависимости `log` необязательные, а функций по умолчанию у него нет |
-| `rand 0.8.5` | `rand_core` | дополнительно `rand_chacha`, `libc`, у `rand_core` — `getrandom` | эти зависимости необязательные (optional) и включаются функциями `std` и `std_rng`, которые у `rand` стоят по умолчанию; depviz функции не вычисляет |
-| `serde_json 1.0.120` | `serde_core → serde_derive` | `serde_derive` под `serde_core` нет | в описании `serde_core` зависимость `serde_derive =1.0.229` указана для платформы `cfg(any())`, которая никогда не выполняется (так авторы serde фиксируют одинаковые версии пакетов); Cargo её не подключает, а depviz учитывает зависимости всех платформ |
+| `log 0.4.22` | только `log` | только `log` | **совпадает**: все зависимости `log` необязательные, функций по умолчанию нет |
+| `serde_json 1.0.120` | `itoa`, `ryu`, `serde → serde_core → serde_derive` | то же, но без `serde_derive` | зависимость `serde_core → serde_derive` объявлена для платформы `cfg(any())`, которая никогда не выполняется; Cargo её не подключает, depviz учитывает зависимости всех платформ. Версии `itoa`, `ryu`, `serde`, `serde_core` совпадают |
+| `rand 0.8.5` | `rand_core` | `libc`, `rand_chacha` (→ `ppv-lite86`, `rand_core`), `rand_core` | `libc` и `rand_chacha` — необязательные зависимости, которые включают функции `std` и `std_rng`, стоящие у `rand` по умолчанию; depviz функции не вычисляет. Версия `rand_core` совпадает |
 
-Проверка последнего пункта — описание зависимостей `serde_core 1.0.229`
+Проверка расхождения для `serde_json` — описание зависимостей `serde_core 1.0.229`
 из индекса:
 
 ```
