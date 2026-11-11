@@ -19,3 +19,8 @@ mini-index:
 
 serve: mini-index
 	$(PYTHON) -m http.server 8000 --directory examples/mini-index
+
+.PHONY: demo-graph
+
+demo-graph:
+	./scripts/demo_graph.sh

@@ -1,0 +1,5 @@
+package: A
+repository: examples/repos/diamond.txt
+test_mode: true
+max_depth: 10
+filter_substring: ""

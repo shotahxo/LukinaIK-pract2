@@ -1,0 +1,5 @@
+package: C
+repository: examples/repos/simple.txt
+test_mode: true
+max_depth: 10
+filter_substring: ""

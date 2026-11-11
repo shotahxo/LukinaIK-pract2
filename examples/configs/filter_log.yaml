@@ -1,0 +1,5 @@
+package: APP
+repository: examples/repos/filter.txt
+test_mode: true
+max_depth: 10
+filter_substring: "LOG"

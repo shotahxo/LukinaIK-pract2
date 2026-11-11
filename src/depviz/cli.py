@@ -5,6 +5,10 @@ import sys
 
 from .cargo_index import CargoIndex, RegistryError
 from .config import DEFAULT_CONFIG, ConfigError, load_config
+from .graph import Settings, build_graph
+from .report import print_graph
+from .sources import CargoSource
+from .test_repo import RepositoryError, TestRepositorySource, load_repository
 
 EXIT_OK = 0
 EXIT_DATA_ERROR = 1
@@ -25,6 +29,10 @@ def build_parser():
         "--show-config", action="store_true",
         help="вывести все параметры конфигурации (этап 1)",
     )
+    parser.add_argument(
+        "--direct", action="store_true",
+        help="вывести только прямые зависимости (этап 2)",
+    )
     return parser
 
 
@@ -42,12 +50,24 @@ def print_direct(config, index, out):
         print(f"Не учитываются (dev или optional): {skipped}", file=out)
 
 
-def execute(config, out):
-    """Выполнить анализ по настройкам."""
+def make_source(config):
+    """Создать источник зависимостей: тестовый файл или индекс Cargo."""
     if config.test_mode:
-        print("Тестовый режим будет поддержан на этапе 3.", file=out)
+        graph = load_repository(config.repository)
+        return TestRepositorySource(graph, config.package)
+    index = CargoIndex(config.repository)
+    return CargoSource(index, config.package, config.version)
+
+
+def execute(config, out, direct=False):
+    """Выполнить анализ по настройкам."""
+    if direct and not config.test_mode:
+        print_direct(config, CargoIndex(config.repository), out)
         return
-    print_direct(config, CargoIndex(config.repository), out)
+    source = make_source(config)
+    settings = Settings(config.max_depth, config.filter_substring)
+    graph = build_graph(source, settings)
+    print_graph(graph, source, settings, out)
 
 
 def run(argv=None, out=None, err=None):
@@ -64,8 +84,8 @@ def run(argv=None, out=None, err=None):
         for line in config.describe():
             print(line, file=out)
     try:
-        execute(config, out)
-    except RegistryError as problem:
+        execute(config, out, args.direct)
+    except (RegistryError, RepositoryError) as problem:
         print(f"Ошибка получения данных: {problem}", file=err)
         return EXIT_DATA_ERROR
     return EXIT_OK

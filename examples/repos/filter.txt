@@ -1,0 +1,8 @@
+# Пакеты с общими буквами для проверки фильтра по подстроке
+APP: CORE LOG TESTKIT
+CORE: UTIL LOGX
+LOG: UTIL
+LOGX: UTIL
+TESTKIT: MOCK
+UTIL:
+MOCK:

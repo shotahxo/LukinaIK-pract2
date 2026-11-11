@@ -74,7 +74,7 @@ class DirectOutputTests(unittest.TestCase):
         config = Config(package="app", repository=URL, version="2.0.0")
         with mock.patch("depviz.cli.CargoIndex",
                         lambda url: make_index()):
-            execute(config, out)
+            execute(config, out, direct=True)
         text = out.getvalue()
         self.assertIn("Прямые зависимости: 3", text)
         self.assertIn("builder ^1 (build)", text)
